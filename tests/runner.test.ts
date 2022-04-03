@@ -13,6 +13,10 @@ const importObject = {
       importObject.output += "\n";
       return arg;
     },
+    abs: Math.abs,
+    max: Math.max,
+    min: Math.min,
+    pow: Math.pow
   },
 
   output: ""
@@ -64,4 +68,38 @@ describe('run(source, config) function', () => {
   });
 
   // TODO: add additional tests here to ensure the compiler runs as expected
+  it('sub two numbers', async() => {
+    const result = await run("2 - 3", config);
+    expect(result).to.equal(-1);
+  });
+
+  it('multiply two numbers', async() => {
+    const result = await run("2 * 3", config);
+    expect(result).to.equal(6);
+  });
+
+  it('returns correct value for multiple binary operations', async() => {
+    const result = await run("2 * 3 + 1", config);
+    expect(result).to.equal(7);
+  });
+
+  it('returns absolute value', async() => {
+    var result = await run("abs(-1)", config);
+    expect(result).to.equal(1);
+  });
+
+  it('returns max value', async() => {
+    var result = await run("max(-1,1)", config);
+    expect(result).to.equal(1);
+  });
+
+  it('returns min value', async() => {
+    var result = await run("min(-1,1)", config);
+    expect(result).to.equal(-1);
+  });
+
+  it('returns pow value', async() => {
+    var result = await run("pow(2,2)", config);
+    expect(result).to.equal(4);
+  });
 });
