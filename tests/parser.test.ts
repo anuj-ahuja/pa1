@@ -1,7 +1,7 @@
 import * as mocha from 'mocha';
 import {expect} from 'chai';
 import { parser } from 'lezer-python';
-import { traverseExpr, traverseStmt, traverse, parse } from '../parser';
+import { traverseExpr, traverseStmt, traverse, parse, parseArgs, definedVars } from '../parser';
 import { BinOp } from '../ast';
 
 // We write tests for each function in parser.ts here. Each function gets its 
@@ -26,6 +26,7 @@ describe('traverseExpr(c, s) function', () => {
 
   // TODO: add additional tests here to ensure traverseExpr works as expected
   it('parses a variable name', () => {
+    definedVars.push('x');
     const source ="x";
     const cursor = parser.parse(source).cursor();
 
@@ -276,4 +277,43 @@ describe('parse(source) function', () => {
     const parsed = parse("1+2*3");
     expect(parsed).to.deep.equal([{tag: "expr", expr: {tag: "binop", op: BinOp.Plus, arg1: { tag: "num", value: 1}, arg2: {tag: "binop", op: BinOp.Mul, arg1: { tag: "num", value: 2}, arg2: { tag: "num", value: 3}}}}]);
   })
+
 });
+
+describe('parseArgs(cursor, source) function', () => {
+  it('parses arguments of length 1', () => {
+    const source ="abs(-1)";
+    const cursor = parser.parse(source).cursor();
+
+    // go to statement
+    cursor.firstChild();
+    // go to expression
+    cursor.firstChild();
+
+    cursor.firstChild();
+    const callName = source.substring(cursor.from, cursor.to);
+    cursor.nextSibling(); // go to arglist
+    cursor.firstChild(); // go into arglist
+    var args = parseArgs(cursor, source);
+
+    expect(args).to.deep.equal([{ tag: "num", value: -1}]);
+  })
+
+  it('parses arguments of length 2', () => {
+    const source ="max(2,3)";
+    const cursor = parser.parse(source).cursor();
+
+    // go to statement
+    cursor.firstChild();
+    // go to expression
+    cursor.firstChild();
+
+    cursor.firstChild();
+    const callName = source.substring(cursor.from, cursor.to);
+    cursor.nextSibling(); // go to arglist
+    cursor.firstChild(); // go into arglist
+    var args = parseArgs(cursor, source);
+
+    expect(args).to.deep.equal([{ tag: "num", value: 2}, { tag: "num", value: 3}]);
+  })
+})

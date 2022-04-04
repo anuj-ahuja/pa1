@@ -2,9 +2,9 @@ import {parser} from "lezer-python";
 import {TreeCursor} from "lezer-tree";
 import {Expr, Stmt, BinOp } from "./ast";
 
-var definedVars : Array<string> = [];
+export var definedVars : Array<string> = [];
 
-function parseArgs(c : TreeCursor, s : string) : Array<Expr> {
+export function parseArgs(c : TreeCursor, s : string) : Array<Expr> {
 
   var args : Array<Expr> = [];
 

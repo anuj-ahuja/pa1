@@ -16,11 +16,19 @@ Ans. 1
          brackets individually using the existing code and then merging it with other expressions, if applicable.
 
 3) What - If we run abs(1,2) in our compiler it gives a parsing error unknown buildin2.
-          However, the python compiler returns a type error abs() takes exactly one argument (2 given).
+          However, the python compiler returns a type error: abs() takes exactly one argument (2 given).
    Why - Our compiler determines the function type (buildin1/buildin2) based on the length of the arguments, 
          therefore if the length is 2 it determines it's a buildin2 which is a wrong interpretation.
    Fix - Instead of determining based on the length of the arguments, we can define a mapping between the function
          and the arguments it can support and use that using parsing.
+
+4) What - If we run pow = 1 and pow(2,2), in our compiler it returns the correct result for pow(2,2) i.e 4.
+            But python compiler gives TypeError: 'int' object is not callable.
+   Why - The python compiler references 'pow' as a integer and not as a function after the first line
+         is executed. Whereas in our compiler we just invoke the pow function in javascript and do not override it with
+         the integer initialization.
+   Fix - We can override the 'pow' to an integer so that it doesn't call it as a function and makes it consistent with
+         the actual python compiler
 
 Q2. What resources did you find most helpful in completing the assignment?
 
